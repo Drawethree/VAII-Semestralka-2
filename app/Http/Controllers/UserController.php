@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Aginev\Datagrid\Datagrid;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -27,13 +28,25 @@ class UserController extends Controller
         $datagrid = new Datagrid($users, $request->get('f', []));
 
         $datagrid->setColumn('name', 'Full name')
+            ->setColumn('role_id', 'Role', [
+                'wrapper' => function ($value, $row) {
+                    return Role::find($value)->title;
+                }
+            ])
             ->setColumn('email', 'Email Address')
             ->setColumn('username', 'Username')
+            ->setColumn('created_at', 'Registered', [
+                'wrapper' => function ($value, $row) {
+                    return $value;
+                }
+            ])
             ->setActionColumn(['wrapper' => function ($value, $row) {
-                if ($row->name != 'admin') {
-                    return '<a href="' . route('user.edit', [$row->id]) . '" title="Edit" class="btn btn-sm btn-primary">Edit</a>
-                    <a href="' . route('user.delete', [$row->id]) . '" title="Delete" class="btn btn-sm btn-danger">Delete</a>';
+                if ($row->username != 'admin') {
+                    return '
+                    <a class="btn btn-sm btn-primary" href="' . route('user.edit', [$row->id]) . '" title="Edit">Edit</a>
+                    <a class="btn btn-sm btn-danger" onclick=" return confirm(\'Are you sure?\') " href="' . route('user.delete', [$row->id]) . '" title="Delete">Delete</a>';
                 } else {
+                    //not admin user
                     //return '<p class="text-danger">You cannot modify admin</p>';
                 }
             }]);

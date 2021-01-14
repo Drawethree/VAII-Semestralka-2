@@ -44,6 +44,7 @@
 
                             <div class="col-md-6">
                                 <input id="username" type="text" class="form-control @error('username') is-invalid @enderror" name="username" value="{{ old('username') }}" required autocomplete="username" autofocus>
+                                <small id="usernameHelp" class="form-text text-muted">You may not change your username in the future!</small>
 
                                 @error('username')
                                 <span class="invalid-feedback" role="alert">

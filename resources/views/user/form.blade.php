@@ -1,8 +1,3 @@
-<div class="form-group text-danger">
-    @foreach($errors->all() as $error)
-        {{ $error }} <br>
-    @endforeach
-</div>
 <form method="post" action=" {{$action}}">
     @csrf
     @method($method)
@@ -15,11 +10,10 @@
         <label for="email">Email address</label>
         <input type="email" class="form-control" id="email" aria-describedby="emailHelp"
                placeholder="Enter email" value="{{old('email',@$model->email)}}">
-        <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
     </div>
     <div class="form-group">
-        <label for="username">Password</label>
-        <input type="text" class="form-control" id="username" placeholder="Username">
+        <label for="username">Username</label>
+        <input type="username" class="form-control" id="username" placeholder="Username" value="{{old('username', @$model->username)}}">
     </div>
     <div class="form-group">
         <label for="password">Password</label>

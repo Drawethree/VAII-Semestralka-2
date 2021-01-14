@@ -5,7 +5,7 @@
         <div class="row justify-content-center">
             <div class="col-md-12">
                 <div class="card">
-                    <div class="card-header">{{ __('Users') }}</div>
+                    <div class="card-header">{{ __('User Manager') }}</div>
 
                     <div class="card-body">
                         @if (session('status'))
@@ -13,7 +13,7 @@
                                 {{ session('status') }}
                             </div>
                         @endif
-                        @can('create', User::class)
+                        @can('create', App\Models\User::class)
                             <div class="mb-3">
                                 <a href="{{route('user.create')}}" class="btn btn-success">{{__('Add new user')}}</a>
                             </div>
