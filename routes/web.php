@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -16,12 +17,14 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
-Auth::routes();
-
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Auth::routes();
 
 Route::group(['middleware' => ['auth']], function () {
     Route::resource('user', UserController::class);
+    Route::resource('article', \App\Http\Controllers\ArticleController::class);
     Route::get('user/{user}/delete', [UserController::class, 'destroy'])->name('user.delete');
+    Route::get('article/{article}/delete', [\App\Http\Controllers\ArticleController::class, 'destroy'])->name('article.delete');
 });
+
+Auth::routes();
