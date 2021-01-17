@@ -98,7 +98,7 @@
 
     <nav class="navbar navbar-expand-md navbar-dark bg-primary shadow-sm">
         <div class="container">
-            <a class="navbar-brand" href="{{ url('/') }}">
+            <a class="navbar-brand" href="{{ route('home') }}">
                 {{ config('app.name', 'Laravel') }}
             </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
@@ -115,10 +115,12 @@
                             <a class="nav-link" href="{{ route('user.index') }}">{{__('Manage Users')}}</a>
                         @endcan
                         @can('viewAny', \App\Models\Article::class)
-                            <a class="nav-link" href="{{ route('user.index') }}">{{__('Manage Articles')}}</a>
+                            <a class="nav-link" href="{{ route('article.index') }}">{{__('Manage Articles')}}</a>
                         @endcan
                     @endauth
-
+                    @guest
+                        <a class="nav-link" href="{{ url('/blog') }}">{{ __('Blog') }}</a>
+                    @endguest
                 </ul>
 
                 <!-- Right Side Of Navbar -->
@@ -137,24 +139,26 @@
                             </li>
                         @endif
                     @else
-                        <li class="nav-item dropdown">
-                            <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
-                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                        <img src="/uploads/avatars/{{ Auth::user()->avatar }}"
+                             style="width:32px; height:32px;border-radius:50%">
+                        <li class="nav-item dropdown"><a
+                                id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                 {{ Auth::user()->username }}
                             </a>
 
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
 
-                                @can('manage', Auth::user())
+                                @can('editProfile', Auth::user())
                                     <a class="dropdown-item" href="{{ route('user.edit', [Auth::user()->id]) }}">
-                                        {{ __('Edit profile') }}
+                                        <i class="fa fa-btn fa-user-edit">{{ __('Edit Profile') }}</i>
                                     </a>
                                 @endcan
 
                                 <a class="dropdown-item" href="{{ route('logout') }}"
                                    onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                    {{ __('Logout') }}
+                                                     document.getElementById('logout-form').submit();"><i
+                                        class="fa fa-btn fa-sign-out">{{ __('Logout') }}</i>
                                 </a>
 
                                 <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">

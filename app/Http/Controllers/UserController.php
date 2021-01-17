@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use Aginev\Datagrid\Datagrid;
+use App\Models\Article;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Intervention\Image\Image;
 
 class UserController extends Controller
 {
@@ -23,7 +26,7 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        $users = User::paginate(25);
+        $users = User::paginate(10);
 
         $datagrid = new Datagrid($users, $request->get('f', []));
 
@@ -52,7 +55,8 @@ class UserController extends Controller
             }]);
 
         return view('user.index', [
-            'grid' => $datagrid
+            'grid' => $datagrid,
+            'users' => $users
         ]);
 
     }
@@ -128,13 +132,14 @@ class UserController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'username' => ['required', 'string', 'max:32', 'unique:users,username,' . $user->username],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $user->id],
-            'password' => ['required', 'string', 'min:8', 'confirmed']
+            'username' => ['required', 'string', 'max:32', 'unique:users,username' . $user->id],
+            'email' => ['required', 'email', 'max:255', 'unique:users,email' . $user->id],
+            'password' => ['required', 'string', 'min:6', 'confirmed']
         ]);
 
         $user->update($request->all());
-        return redirect()->route('user.index');
+        $user->updateAvatar($request);
+        return redirect()->route('home');
     }
 
     /**
@@ -146,6 +151,26 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         $user->delete();
+        $articles = Article::where('user_id', $user->id);
+        foreach ($articles as $article) {
+            $article->delete();
+        }
         return redirect()->route('user.index');
+    }
+
+    private function updateAvatar(Request $request)
+    {
+
+        if ($request->hasFile('avatar')) {
+            $avatar = $request->file('avatar');
+            $filename = time() . '.' . $avatar->getClientOriginalExtension();
+
+            Image::make($avatar)->resize(300, 300)->save(public_path('/uploads/avatars/' . $filename));
+
+            $user = Auth::user();
+            $user->avatar = $filename;
+            Auth::user()->save();
+        }
+
     }
 }

@@ -1,33 +1,33 @@
-
 @extends('layouts.app')
 
 @section('content')
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-12">
-                @if(Auth::user()->can('create', Article::class))
-                    <div class="mb-3">
-                        <a href="{{route('article.create')}}" class="btn btn-success">{{__('Create new article')}}</a>
-                    </div>
-                @endif
 
-                @foreach($articles as $article)
-                    @if (Auth::user()->can('view', $article))
-                        <div class="card mt-5">
-                            <div class="card-body">
-                                <h5 class="card-title">{{ $article->title }}</h5>
-                                <h6 class="card-subtitle mb-2 text-muted">{{ \App\Models\User::find($article->user_id)->username }}</h6>
-                                <p class="card-text">{{$article->text}}</p>
-                                <p class="card-text">{{$article->updated_at->diffForHumans()}}</p>
-                                @if(Auth::user()->can('update', $article))
-                                    <a href="{{route('article.edit', [$article->id])}}" class="btn btn-primary">Edit
-                                        Article</a>
-                                @endif
-                            </div>
+                @auth
+                    @if(Auth::user()->can('create', \App\Models\Article::class))
+                        <div class="mt-3">
+                            <a href="{{route('article.create')}}"
+                               class="btn btn-success">{{__('Create new article')}}</a>
                         </div>
                     @endif
+                @endauth
+
+                @foreach($articles as $article)
+                    <div class="card mt-3">
+                        <div class="card-body">
+                            <a href="{{ route('article.view', [$article->id]) }}"><h5 class="card-title">{{ $article->title }}</h5></a>
+                            <h6 class="card-subtitle mb-2 text-muted">{{ \App\Models\User::find($article->user_id)->username }}</h6>
+                            <p class="card-text">{{$article->updated_at->diffForHumans()}}</p>
+                        </div>
+                    </div>
                 @endforeach
+            </div>
+            <div class="d-flex justify-content-center pt-5">
+                {!! $articles->links() !!}
             </div>
         </div>
     </div>
 @endsection
+

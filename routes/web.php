@@ -16,15 +16,19 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::get('/', [\App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
 Auth::routes();
+
 
 Route::group(['middleware' => ['auth']], function () {
     Route::resource('user', UserController::class);
-    Route::resource('article', \App\Http\Controllers\ArticleController::class);
+    Route::resource('article', ArticleController::class);
     Route::get('user/{user}/delete', [UserController::class, 'destroy'])->name('user.delete');
-    Route::get('article/{article}/delete', [\App\Http\Controllers\ArticleController::class, 'destroy'])->name('article.delete');
+    Route::get('article/{article}/delete', [ArticleController::class, 'destroy'])->name('article.delete');
+    Route::get('article/{article}/approve', [ArticleController::class, 'approve'])->name('article.approve');
+    Route::get('article/{article}/view', [ArticleController::class, 'show'])->name('article.view');
+
 });
 
-Auth::routes();
