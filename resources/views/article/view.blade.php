@@ -21,7 +21,21 @@
                                 <a href="{{route('article.delete', [$article->id])}}" class="btn btn-danger">Delete
                                 </a>
                             @endif
+                            @if(Auth::user()->can('create', \App\Models\Comment::class))
+                                <a href="{{route('article.edit', [$article->id])}}" class="btn btn-primary">Delete
+                                </a>
+                            @endif
                         @endauth
+
+                        @foreach($article->comments as $comment)
+                            <div class="card mt-3">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ $comment->user->username }}</h5>
+                                    <h6 class="card-subtitle mb-2 text-muted">{{ $comment->text }}</h6>
+                                </div>
+
+                            </div>
+                        @endforeach
                     </div>
                 </div>
             </div>

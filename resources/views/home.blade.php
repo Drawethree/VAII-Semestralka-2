@@ -19,9 +19,11 @@
                         <div class="card-body">
                             <img class="card-img-top" src="/uploads/avatars/{{ $article->user->avatar }}"
                                  style="width:32px; height:32px;border-radius:50%">
-                            <a href="{{ route('article.view', [$article->id]) }}"><h5 class="card-title">{{ $article->title }}</h5></a>
+                            <a href="{{ route('article.view', [$article->id]) }}"><h5
+                                    class="card-title">{{ $article->title }}</h5></a>
                             <h6 class="card-subtitle mb-2 text-muted">{{ $article->user->username }}</h6>
                             <p class="card-text">{{$article->updated_at->diffForHumans()}}</p>
+                            <p class="card-text">{{$article->comments->count()}} comments</p>
                         </div>
                     </div>
                 @endforeach

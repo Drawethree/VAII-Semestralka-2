@@ -149,7 +149,9 @@ class ArticleController extends Controller
     function destroy(Article $article)
     {
         $article->delete();
+        $article->comments()->delete();
         return redirect()->route('article.index');
+
     }
 
     public
