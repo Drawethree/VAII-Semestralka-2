@@ -18,7 +18,7 @@ class AddArticlesTable extends Migration
             $table->foreignId('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->string('title');
             $table->boolean('approved')->default(0);
-            $table->string('text');
+            $table->longText('text');
             $table->timestamps();
         });
     }

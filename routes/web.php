@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\ArticleController;
+use App\Http\Controllers\CommentController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -17,15 +19,19 @@ use Illuminate\Support\Facades\Route;
 */
 
 
-Route::get('/', [\App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Auth::routes();
 
 Route::get('article/{article}/view', [ArticleController::class, 'show'])->name('article.view');
 
+
+
+
 Route::group(['middleware' => ['auth']], function () {
     Route::resource('user', UserController::class);
     Route::resource('article', ArticleController::class);
+    Route::resource('comment', CommentController::class);
     Route::get('user/{user}/delete', [UserController::class, 'destroy'])->name('user.delete');
     Route::get('article/{article}/delete', [ArticleController::class, 'destroy'])->name('article.delete');
     Route::get('article/{article}/approve', [ArticleController::class, 'approve'])->name('article.approve');
