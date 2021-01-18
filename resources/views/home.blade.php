@@ -17,6 +17,8 @@
                 @foreach($articles as $article)
                     <div class="card mt-3">
                         <div class="card-body">
+                            <img class="card-img-top" src="/uploads/avatars/{{ \App\Models\User::find($article->user_id)->avatar }}"
+                                 style="width:32px; height:32px;border-radius:50%">
                             <a href="{{ route('article.view', [$article->id]) }}"><h5 class="card-title">{{ $article->title }}</h5></a>
                             <h6 class="card-subtitle mb-2 text-muted">{{ \App\Models\User::find($article->user_id)->username }}</h6>
                             <p class="card-text">{{$article->updated_at->diffForHumans()}}</p>

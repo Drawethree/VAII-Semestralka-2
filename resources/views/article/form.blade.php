@@ -1,4 +1,4 @@
-<form method="post" action=" {{$action}}">
+<form method="post" action="{{ $action }}">
     @csrf
     @method($method)
 
@@ -24,6 +24,6 @@
         @enderror
     </div>
 
-    <button type="submit" class="btn btn-primary"> @if($type == 'create') Submit for approval @else Edit
+    <button type="submit" class="btn btn-primary form-control"> @if($type == 'create') Submit for approval @else Edit
         Article @endif</button>
 </form>

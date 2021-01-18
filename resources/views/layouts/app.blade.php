@@ -149,9 +149,9 @@
 
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
 
-                                @can('editProfile', Auth::user())
+                                @can('update', Auth::user())
                                     <a class="dropdown-item" href="{{ route('user.edit', [Auth::user()->id]) }}">
-                                        <i class="fa fa-btn fa-user-edit">{{ __('Edit Profile') }}</i>
+                                        <i class="fa fa-btn fa-user">{{ __('Edit Profile') }}</i>
                                     </a>
                                 @endcan
 

@@ -7,8 +7,7 @@ use App\Models\Article;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Intervention\Image\Image;
+use Image;
 
 class UserController extends Controller
 {
@@ -132,13 +131,23 @@ class UserController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'username' => ['required', 'string', 'max:32', 'unique:users,username' . $user->id],
-            'email' => ['required', 'email', 'max:255', 'unique:users,email' . $user->id],
-            'password' => ['required', 'string', 'min:6', 'confirmed']
+            'username' => ['required', 'string', 'max:32', 'unique:users,username,' . $user->id],
+            'email' => ['required', 'email', 'unique:users,email,' . $user->id],
+            'password' => ['required', 'min:6', 'confirmed']
         ]);
 
         $user->update($request->all());
-        $user->updateAvatar($request);
+
+        if($request->hasFile('avatar')){
+            $avatar = $request->file('avatar');
+            $filename = time() . '.' . $avatar->getClientOriginalExtension();
+
+            Image::make($avatar)->resize(300, 300)->save( public_path('/uploads/avatars/' . $filename ) );
+
+            $user->avatar = $filename;
+            $user->save();
+        }
+
         return redirect()->route('home');
     }
 
@@ -150,27 +159,9 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
+        $id = $user->id;
         $user->delete();
-        $articles = Article::where('user_id', $user->id);
-        foreach ($articles as $article) {
-            $article->delete();
-        }
+        Article::where('user_id', $id)->delete();
         return redirect()->route('user.index');
-    }
-
-    private function updateAvatar(Request $request)
-    {
-
-        if ($request->hasFile('avatar')) {
-            $avatar = $request->file('avatar');
-            $filename = time() . '.' . $avatar->getClientOriginalExtension();
-
-            Image::make($avatar)->resize(300, 300)->save(public_path('/uploads/avatars/' . $filename));
-
-            $user = Auth::user();
-            $user->avatar = $filename;
-            Auth::user()->save();
-        }
-
     }
 }
