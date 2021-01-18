@@ -9,6 +9,7 @@
     "license": "MIT",
     "require": {
         "aginev/datagrid": "2.0.*",
+        "aginev/search-filters": "^1.0",
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",

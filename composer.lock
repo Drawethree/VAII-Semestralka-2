@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "aa9a1eb5e2ad9a84b746d9d6cf4616b2",
+    "content-hash": "32dbc9e53abf648040c32bfea264ed12",
     "packages": [
         {
             "name": "aginev/datagrid",
@@ -57,6 +57,57 @@
                 "source": "https://github.com/aginev/datagrid/tree/2.0.0"
             },
             "time": "2020-09-17T12:28:13+00:00"
+        },
+        {
+            "name": "aginev/search-filters",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/aginev/search-filters.git",
+                "reference": "bd8f43108287313a0320b79cb952528f77dd442a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/aginev/search-filters/zipball/bd8f43108287313a0320b79cb952528f77dd442a",
+                "reference": "bd8f43108287313a0320b79cb952528f77dd442a",
+                "shasum": ""
+            },
+            "require": {
+                "laravel/framework": "^7.0|^8.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Aginev\\Datagrid\\DatagridServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Aginev\\SearchFilters\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Atanas Ginev",
+                    "email": "naskospam@gmail.com"
+                }
+            ],
+            "description": "Easily apply search criteria on Laravel 5+ queries",
+            "homepage": "http://aginev.com",
+            "keywords": [
+                "search filters"
+            ],
+            "support": {
+                "issues": "https://github.com/aginev/search-filters/issues",
+                "source": "https://github.com/aginev/search-filters/tree/1.0.0"
+            },
+            "time": "2020-09-17T13:45:30+00:00"
         },
         {
             "name": "asm89/stack-cors",

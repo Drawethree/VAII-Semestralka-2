@@ -4,7 +4,8 @@
 
     <div class="form-group">
         <label for="title">Title</label>
-        <input type="text" class="form-control @error('title') is-invalid @enderror" id="title" placeholder="Title"
+        <input type="text" class="form-control @error('title') is-invalid @enderror" id="title" name="title"
+               placeholder="Title"
                value="{{old('title', @$model->title)}}">
         @error('title')
         <span class="invalid-feedback" role="alert">
@@ -14,16 +15,22 @@
     </div>
 
     <div class="form-group">
-        <label for="text">Title</label>
-        <input type="text" class="form-control @error('text') is-invalid @enderror" id="text" placeholder="Text"
-               value="{{old('text', @$model->text)}}">
-        @error('title')
-        <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-        @enderror
+        <label for="text">Text</label>
+        <textarea type="text" class="form-control" id="text" name="text"
+                  value="">{{ old('text', @$model->text) }}</textarea>
     </div>
 
-    <button type="submit" class="btn btn-primary form-control"> @if($type == 'create') Submit for approval @else Edit
-        Article @endif</button>
+    <button type="submit" class="btn btn-primary form-control"> @if($type == 'create') Submit for approval @else
+            Edit
+            Article @endif</button>
 </form>
+<script>
+    tinymce.init({
+        selector: 'textarea',
+        plugins: 'a11ychecker advcode casechange formatpainter linkchecker autolink lists checklist media mediaembed pageembed permanentpen powerpaste table advtable tinycomments tinymcespellchecker',
+        toolbar: 'a11ycheck addcomment showcomments casechange checklist code formatpainter pageembed permanentpen table',
+        toolbar_mode: 'floating',
+        tinycomments_mode: 'embedded',
+        tinycomments_author: 'Author name',
+    });
+</script>

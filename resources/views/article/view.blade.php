@@ -7,8 +7,10 @@
                 <div class="card mt-5">
                     <div class="card-body">
                         <h5 class="card-title">{{ $article->title }}</h5>
-                        <h6 class="card-subtitle mb-2 text-muted">{{ \App\Models\User::find($article->user_id)->username }}</h6>
-                        <p class="card-text">{{$article->text}}</p>
+                        <h6 class="card-subtitle mb-2 text-muted">{{ $article->user->username }}</h6>
+                        <div class="card-text">
+                            {!! $article->text !!}
+                        </div>
                         <p class="card-text">{{$article->updated_at->diffForHumans()}}</p>
                         @auth
                             @if(Auth::user()->can('update', $article))

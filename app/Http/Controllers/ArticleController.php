@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use Aginev\Datagrid\Datagrid;
 use App\Models\Article;
-use App\Models\Role;
-use App\Models\User;
 use Illuminate\Http\Request;
 
 class ArticleController extends Controller
@@ -23,7 +21,7 @@ class ArticleController extends Controller
 
         $datagrid->setColumn('user_id', 'Username', [
             'wrapper' => function ($value, $row) {
-                return User::find($value)->username;
+                return $row->user->username;
             }
         ])
             ->setColumn('title', 'Title')
@@ -61,7 +59,7 @@ class ArticleController extends Controller
         return view('article.create', [
             'action' => route('article.store'),
             'type' => 'create',
-            'method' => 'post'
+            'method' => 'post',
         ]);
     }
 
@@ -78,8 +76,16 @@ class ArticleController extends Controller
             'title' => ['required', 'string', 'max:255'],
             'text' => ['required', 'string'],
         ]);
-        $article = Article::create($request->all());
+
+        $article = Article::create([
+            'text' => request('text'),
+            'title' => request('title'),
+            'approved' => 0,
+            'user_id' => auth()->id()
+        ]);
+
         $article->save();
+
         return redirect()->route('article.index');
     }
 

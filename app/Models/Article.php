@@ -12,11 +12,8 @@ class Article extends Model
     protected $fillable = [
         'title',
         'text',
-        'approved'
-    ];
-
-    protected $hidden = [
-        'user_id',
+        'approved',
+        'user_id'
     ];
 
     /**
@@ -27,4 +24,14 @@ class Article extends Model
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo('App\Models\User');
+    }
+
+    public function comments()
+    {
+        return $this->hasMany('App\Models\Comment');
+    }
 }

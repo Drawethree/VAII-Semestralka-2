@@ -15,7 +15,6 @@
                         @endif
                         {!! $grid->show() !!}
                     </div>
-                    {!! $articles->links() !!}
                 </div>
             </div>
         </div>

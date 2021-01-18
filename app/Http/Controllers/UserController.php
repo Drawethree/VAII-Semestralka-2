@@ -81,12 +81,14 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'username' => ['required', 'string', 'max:32', 'unique:users,username'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
             'password' => ['required', 'string', 'min:8', 'confirmed']
         ]);
+
         $user = User::create($request->all());
         $user->save();
         return redirect()->route('user.index');
@@ -159,9 +161,10 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        $id = $user->id;
         $user->delete();
-        Article::where('user_id', $id)->delete();
+
+        $user->articles()->delete();
+
         return redirect()->route('user.index');
     }
 }

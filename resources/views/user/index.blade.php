@@ -20,7 +20,6 @@
                         @endcan
                         {!! $grid->show() !!}
                     </div>
-                    {!! $users->links() !!}
                 </div>
             </div>
         </div>

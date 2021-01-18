@@ -18,7 +18,7 @@ class User extends Authenticatable
      * @var array
      */
 
-    protected $fillable = ['name', 'username', 'password', 'email'];
+    protected $fillable = ['name', 'username', 'password', 'email', 'avatar'];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -42,5 +42,10 @@ class User extends Authenticatable
     public function setPasswordAttribute($password)
     {
         $this->attributes['password'] = Hash::make($password);
+    }
+
+    public function articles()
+    {
+        return $this->hasMany('App\Models\Article');
     }
 }

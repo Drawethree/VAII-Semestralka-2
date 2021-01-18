@@ -11,6 +11,7 @@
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}"></script>
+    <script src="https://cdn.tiny.cloud/1/k6x8z4me2jtlcx50pnxn9nte46nq69eybd4604tchz6znras/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -119,7 +120,7 @@
                         @endcan
                     @endauth
                     @guest
-                        <a class="nav-link" href="{{ url('/blog') }}">{{ __('Blog') }}</a>
+                        <a class="nav-link" href="{{ route('home') }}">{{ __('Blog') }}</a>
                     @endguest
                 </ul>
 
