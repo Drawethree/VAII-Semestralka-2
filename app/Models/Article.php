@@ -13,7 +13,8 @@ class Article extends Model
         'title',
         'text',
         'approved',
-        'user_id'
+        'user_id',
+        'forum_id'
     ];
 
 
@@ -30,6 +31,11 @@ class Article extends Model
     public function user()
     {
         return $this->belongsTo('App\Models\User');
+    }
+
+    public function forum()
+    {
+        return $this->belongsTo('App\Models\Forum');
     }
 
     public function comments()

@@ -18,8 +18,10 @@ class User extends Authenticatable
      * @var array
      */
 
+
     protected $fillable = ['name', 'username', 'password', 'email', 'avatar', 'role_id'];
 
+    protected $connection = 'mysql';
     /**
      * The attributes that should be hidden for arrays.
      *
@@ -49,7 +51,13 @@ class User extends Authenticatable
         return $this->hasMany('App\Models\Article');
     }
 
-    public function role() {
+    public function role()
+    {
         return $this->belongsTo('App\Models\Role');
+    }
+
+    public function getIsAdminAttribute()
+    {
+        return $this->role()->first()->id <= 1;
     }
 }

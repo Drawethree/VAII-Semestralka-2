@@ -100,27 +100,39 @@
         ;
     </script>
 
-    <nav class="navbar navbar-expand-md navbar-dark bg-primary">
+    <nav class="navbar navbar-expand-md navbar-dark bg-primary navbar-collapse">
         <div class="container-fluid">
-            <a class="navbar-brand" href="{{ route('home') }}">
-                {{ config('app.name', 'Laravel') }}</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-                    aria-controls="navbarSupportedContent" aria-expanded="false"
-                    aria-label="{{ __('Toggle navigation') }}">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+            <a class="navbar-brand" href="{{ route('home') }}"><img
+                    src="https://getbootstrap.com/docs/4.0/assets/brand/bootstrap-solid.svg" width="25" height="25">
+                {{ substr(config('app.name', 'Laravel'),1) }}</a>
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <!-- Left Side Of Navbar -->
                 <ul class="navbar-nav mr-auto">
                     @auth
-                        @can('viewAny', Auth::user())
-                            <a class="nav-link" href="{{ route('users') }}">{{__('Manage Users')}}</a>
-                        @endcan
-                        @can('viewAny', \App\Models\Article::class)
-                            <a class="nav-link" href="{{ route('article.index') }}">{{__('Manage Articles')}}</a>
-                        @endcan
+                        @if(Auth::check() && Auth::user()->getIsAdminAttribute())
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Admin
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    @can('viewAny', Auth::user())
+                                        <a class="dropdown-item" href="{{ route('users') }}"><i class="fa fa-user-plus">&nbsp;</i> {{__('Manage Users')}}</a>
+                                    @endcan
+                                    @can('viewAny', \App\Models\Article::class)
+                                        <a class="dropdown-item"
+                                           href="{{ route('article.index') }}"><i class="fa fa-newspaper-o">&nbsp;</i> {{__('Manage Articles')}}</a>
+                                    @endcan
+                                </div>
+                            </li>
+                        @endif
                     @endauth
+
+                    @foreach(\App\Models\Forum::all() as $forum)
+                        <a class="nav-item nav-link"
+                           href="{{route('forum.view', $forum->id)}}">{{__($forum->title)}}</a>
+                    @endforeach
                 </ul>
 
                 <!-- Right Side Of Navbar -->
