@@ -227,6 +227,11 @@
             </div>
 
             <main class="col-md-8">
+                @if (session('status'))
+                    <div class="alert alert-success mt-3" role="alert">
+                        {{ session('status') }}
+                    </div>
+                @endif
                 @yield('content')
             </main>
 

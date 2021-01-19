@@ -7,6 +7,7 @@ use App\Models\Article;
 use App\Models\Forum;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 class ArticleController extends Controller
 {
@@ -102,8 +103,10 @@ class ArticleController extends Controller
         $article->save();
 
         if (Auth::user()->getIsAdminAttribute()) {
+            Session::flash('status', 'Article ' . $article->id . ' was edited!');
             return redirect()->route('article.index');
         } else {
+            Session::flash('status', 'Your article was created! Please wait until admin approves it.');
             return redirect()->route('forum.view', $data['forum_id']);
         }
     }
@@ -158,6 +161,9 @@ class ArticleController extends Controller
             'title' => request('title'),
             'text' => request('text')
         ]);
+
+        Session::flash('status', 'Article ' . $article->id . ' was updated!');
+
         return redirect()->route('article.index');
     }
 
@@ -172,6 +178,8 @@ class ArticleController extends Controller
     {
         $article->delete();
         $article->comments()->delete();
+        Session::flash('status', 'Article ' . $article->id . ' was deleted!');
+
         return redirect()->route('article.index');
 
     }
@@ -181,6 +189,8 @@ class ArticleController extends Controller
     {
         $article->approved = 1;
         $article->save();
+        Session::flash('status', 'Article ' . $article->id . ' was approved!');
+
         return redirect()->route('article.index');
     }
 
@@ -192,6 +202,8 @@ class ArticleController extends Controller
             $article->approved = 1;
             $article->save();
         }
+
+        Session::flash('status', 'All articles were approved!');
 
         return redirect()->route('article.index');
     }

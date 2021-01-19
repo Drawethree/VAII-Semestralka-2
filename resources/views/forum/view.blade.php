@@ -4,6 +4,11 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-12">
+                @if (session('status'))
+                    <div class="alert alert-success" role="alert">
+                        {{ session('status') }}
+                    </div>
+                @endif
                 @foreach($articles as $article)
                     <div class="card mt-3">
                         <div class="row no-gutters">

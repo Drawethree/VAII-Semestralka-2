@@ -3,11 +3,10 @@
 namespace App\Http\Controllers;
 
 use Aginev\Datagrid\Datagrid;
-use App\Models\Article;
-use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 use Image;
 
 class UserController extends Controller
@@ -92,6 +91,8 @@ class UserController extends Controller
 
         $user = User::create($request->all());
         $user->save();
+
+        Session::flash('status', 'User successfully created!');
         return redirect()->route('user.index');
     }
 
@@ -151,9 +152,13 @@ class UserController extends Controller
             $user->save();
         }
 
+
+
         if (Auth::user()->getIsAdminAttribute()) {
+            Session::flash('status', 'User successfully edited!');
             return redirect()->route('users');
         } else {
+            Session::flash('status', 'Profile successfully edited!');
             return redirect()->route('home');
         }
     }
@@ -170,6 +175,7 @@ class UserController extends Controller
 
         $user->articles()->delete();
 
+        Session::flash('status', 'User successfully deleted!');
         return redirect()->route('user.index');
     }
 }
