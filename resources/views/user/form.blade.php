@@ -48,7 +48,7 @@
     <div class="form-group">
         <label for="avatar">Profile picture</label>
         <input type="file" class="form-control-file" name="avatar"
-               placeholder="Profile picture" id="avatar">
+               id="avatar">
         @error('avatar')
         <div class="alert alert-danger">{{ $message }}</div>
         @enderror

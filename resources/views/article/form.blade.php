@@ -15,9 +15,13 @@
     </div>
 
     <div class="form-group">
+        <input type="hidden" class="form-control" id="forum_id" name="forum_id" value="{{@$forum->id}}">
+    </div>
+
+    <div class="form-group">
         <label for="text">Text</label>
-        <textarea type="text" class="form-control" id="text" name="text"
-                  value="">{{ old('text', @$model->text) }}</textarea>
+        <textarea class="form-control" id="text" name="text"
+        >{{ old('text', @$model->text) }}</textarea>
     </div>
 
     <button type="submit" class="btn btn-primary form-control"> @if($type == 'create') Submit for approval @else

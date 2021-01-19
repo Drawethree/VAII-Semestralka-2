@@ -20,15 +20,14 @@ class HomeController extends Controller
     public function index()
     {
         return view('home', [
-            'forums' => Forum::all(),
-            'last_posts'=> Article::orderBy('updated_at', 'desc')->take(5)->get()
+            'forums'=>Forum::all()
         ]);
     }
 
     public function getBlogStats()
     {
         $usersCount = User::all()->count();
-        $articlesCount = Article::all()->count();
+        $articlesCount = Article::where('approved', 1)->count();
         $commentsCount = Comment::all()->count();
         $forumsCount = Forum::all()->count();
 

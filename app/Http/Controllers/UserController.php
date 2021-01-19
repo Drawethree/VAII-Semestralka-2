@@ -151,7 +151,11 @@ class UserController extends Controller
             $user->save();
         }
 
-        return redirect()->route('users');
+        if (Auth::user()->getIsAdminAttribute()) {
+            return redirect()->route('users');
+        } else {
+            return redirect()->route('home');
+        }
     }
 
     /**

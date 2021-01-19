@@ -9,7 +9,7 @@
                         <div class="row no-gutters">
                             <div class="col-md-auto mt-3">
                                 <img class="card-img-top" src="/uploads/avatars/{{ $article->user->avatar }}"
-                                     style="width:64px; height:64px;border-radius:50%">
+                                     style="width:64px; height:64px;border-radius:50%" alt="avatar">
                             </div>
                             <div class="col-md-auto">
                                 <div class="card-body">
@@ -31,7 +31,7 @@
                 @auth
                     @if(Auth::user()->can('create', \App\Models\Article::class))
                         <div class="mt-3">
-                            <a href="{{route('article.create')}}"
+                            <a href="{{ route('forum.newpost', [$forum]) }}"
                                class="btn btn-success"><i
                                     class="fa fa-plus-circle">&nbsp;</i>{{__('Create new article')}}
                             </a>

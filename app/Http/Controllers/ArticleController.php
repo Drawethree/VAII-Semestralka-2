@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use Aginev\Datagrid\Datagrid;
 use App\Models\Article;
+use App\Models\Forum;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ArticleController extends Controller
 {
@@ -20,20 +22,26 @@ class ArticleController extends Controller
 
         $datagrid = new Datagrid($articles, $request->get('f', []));
 
-        $datagrid->setColumn('user_id', 'Username', [
+        $datagrid->setColumn('user_id', 'User', [
             'wrapper' => function ($value, $row) {
                 return $row->user->username;
             }
         ])
-            ->setColumn('title', 'Title')
+            ->setColumn('title', 'Post title')
             ->setColumn('text', 'Text')
             ->setColumn('created_at', 'Created At', [
                 'wrapper' => function ($value, $row) {
                     return $value;
                 }
             ])
+            ->setColumn('forum', 'Forum', [
+                'wrapper' => function ($value, $row) {
+                    return '<a href="' . route('forum.view', $value->id) . '">' . $value->title . '</a>';
+                }
+            ])
             ->setActionColumn(['wrapper' => function ($value, $row) {
                 $returnVal = '
+                    <a class="btn btn-sm btn-warning" href="' . route('article.view', [$row->id]) . '" title="View"><i class="fa fa-eye">&nbsp;</i>View</a>
                     <a class="btn btn-sm btn-primary" href="' . route('article.edit', [$row->id]) . '" title="Edit"><i class="fa fa-edit">&nbsp;</i>Edit</a>
                     <a class="btn btn-sm btn-danger" onclick=" return confirm(\'Are you sure?\') " href="' . route('article.delete', [$row->id]) . '" title="Delete"><i class="fa fa-trash">&nbsp;</i>Delete</a>';
 
@@ -47,7 +55,7 @@ class ArticleController extends Controller
         return view('article.index', [
             'grid' => $datagrid,
             'articles' => $articles,
-            'not_approved'=>$notApprovedCount
+            'not_approved' => $notApprovedCount
         ]);
 
     }
@@ -58,12 +66,13 @@ class ArticleController extends Controller
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\Response
      */
     public
-    function create()
+    function create(Forum $forum)
     {
         return view('article.create', [
             'action' => route('article.store'),
             'type' => 'create',
             'method' => 'post',
+            'forum' => $forum
         ]);
     }
 
@@ -81,16 +90,22 @@ class ArticleController extends Controller
             'text' => ['required', 'string'],
         ]);
 
-        $article = Article::create([
-            'text' => request('text'),
-            'title' => request('title'),
-            'approved' => 0,
-            'user_id' => auth()->id()
-        ]);
+        $data = [];
+        $data['text'] = request('text');
+        $data['title'] = request('title');
+        $data['approved'] = 0;
+        $data['forum_id'] = request('forum_id');
+        $data['user_id'] = auth()->id();
+
+        $article = Article::create($data);
 
         $article->save();
 
-        return redirect()->route('article.index');
+        if (Auth::user()->getIsAdminAttribute()) {
+            return redirect()->route('article.index');
+        } else {
+            return redirect()->route('forum.view', $data['forum_id']);
+        }
     }
 
     /**
@@ -139,7 +154,10 @@ class ArticleController extends Controller
             'text' => ['required', 'string'],
         ]);
 
-        $article->update($request->all());
+        $article->update([
+            'title' => request('title'),
+            'text' => request('text')
+        ]);
         return redirect()->route('article.index');
     }
 

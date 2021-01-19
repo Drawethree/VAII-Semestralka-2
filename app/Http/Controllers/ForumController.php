@@ -2,9 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Article;
 use App\Models\Forum;
-use Illuminate\Http\Request;
 
 class ForumController extends Controller
 {
@@ -12,7 +10,19 @@ class ForumController extends Controller
     function show(Forum $forum)
     {
         return view('forum.view', [
-            'articles' => $forum->articles()->where('approved', 1)->paginate(5)
+            'articles' => $forum->articles()->where('approved', 1)->paginate(5),
+            'forum' => $forum
         ]);
     }
+
+    public function createArticle(Forum $forum)
+    {
+        return view('article.create', [
+            'action' => route('article.store'),
+            'type' => 'create',
+            'method' => 'post',
+            'forum' => $forum
+        ]);
+    }
+
 }
