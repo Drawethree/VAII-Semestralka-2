@@ -15,7 +15,8 @@ class ArticleController extends Controller
      */
     public function index(Request $request)
     {
-        $articles = Article::paginate(10);
+        $articles = Article::paginate(5);
+        $notApprovedCount = Article::where('approved', 0)->get()->count();
 
         $datagrid = new Datagrid($articles, $request->get('f', []));
 
@@ -33,18 +34,21 @@ class ArticleController extends Controller
             ])
             ->setActionColumn(['wrapper' => function ($value, $row) {
                 $returnVal = '
-                    <a class="btn btn-sm btn-primary" href="' . route('article.edit', [$row->id]) . '" title="Edit">Edit</a>
-                    <a class="btn btn-sm btn-danger" onclick=" return confirm(\'Are you sure?\') " href="' . route('article.delete', [$row->id]) . '" title="Delete">Delete</a>';
+                    <a class="btn btn-sm btn-primary" href="' . route('article.edit', [$row->id]) . '" title="Edit"><i class="fa fa-edit">&nbsp;</i>Edit</a>
+                    <a class="btn btn-sm btn-danger" onclick=" return confirm(\'Are you sure?\') " href="' . route('article.delete', [$row->id]) . '" title="Delete"><i class="fa fa-trash">&nbsp;</i>Delete</a>';
 
                 if ($row->approved == 0) {
-                    $returnVal .= '<a class="btn btn-sm btn-success" href="' . route('article.approve', [$row->id]) . '" title="Approve">Approve</a>';
+                    $returnVal .= ' <a class="btn btn-sm btn-success" href="' . route('article.approve', [$row->id]) . '" title="Approve"><i class="fa fa-check">&nbsp;</i>Approve</a>';
                 }
                 return $returnVal;
 
             }]);
 
-        return view('article.index', ['grid' => $datagrid,
-            'articles' => $articles]);
+        return view('article.index', [
+            'grid' => $datagrid,
+            'articles' => $articles,
+            'not_approved'=>$notApprovedCount
+        ]);
 
     }
 
@@ -159,6 +163,18 @@ class ArticleController extends Controller
     {
         $article->approved = 1;
         $article->save();
+        return redirect()->route('article.index');
+    }
+
+    public function approveAll()
+    {
+        $articles = Article::where('approved', 0)->get();
+
+        foreach ($articles as $article) {
+            $article->approved = 1;
+            $article->save();
+        }
+
         return redirect()->route('article.index');
     }
 }

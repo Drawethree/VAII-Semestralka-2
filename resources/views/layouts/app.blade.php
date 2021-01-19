@@ -11,7 +11,10 @@
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}"></script>
-    <script src="https://cdn.tiny.cloud/1/k6x8z4me2jtlcx50pnxn9nte46nq69eybd4604tchz6znras/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+    <script src="https://cdn.tiny.cloud/1/k6x8z4me2jtlcx50pnxn9nte46nq69eybd4604tchz6znras/tinymce/5/tinymce.min.js"
+            referrerpolicy="origin"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -97,11 +100,10 @@
         ;
     </script>
 
-    <nav class="navbar navbar-expand-md navbar-dark bg-primary shadow-sm">
-        <div class="container">
+    <nav class="navbar navbar-expand-md navbar-dark bg-primary">
+        <div class="container-fluid">
             <a class="navbar-brand" href="{{ route('home') }}">
-                {{ config('app.name', 'Laravel') }}
-            </a>
+                {{ config('app.name', 'Laravel') }}</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                     aria-controls="navbarSupportedContent" aria-expanded="false"
                     aria-label="{{ __('Toggle navigation') }}">
@@ -113,15 +115,12 @@
                 <ul class="navbar-nav mr-auto">
                     @auth
                         @can('viewAny', Auth::user())
-                            <a class="nav-link" href="{{ route('user.index') }}">{{__('Manage Users')}}</a>
+                            <a class="nav-link" href="{{ route('users') }}">{{__('Manage Users')}}</a>
                         @endcan
                         @can('viewAny', \App\Models\Article::class)
                             <a class="nav-link" href="{{ route('article.index') }}">{{__('Manage Articles')}}</a>
                         @endcan
                     @endauth
-                    @guest
-                        <a class="nav-link" href="{{ route('home') }}">{{ __('Blog') }}</a>
-                    @endguest
                 </ul>
 
                 <!-- Right Side Of Navbar -->
@@ -151,15 +150,15 @@
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
 
                                 @can('update', Auth::user())
-                                    <a class="dropdown-item" href="{{ route('user.edit', [Auth::user()->id]) }}">
-                                        <i class="fa fa-btn fa-user">{{ __('Edit Profile') }}</i>
+                                    <a class="dropdown-item"
+                                       href="{{ route('user.edit', [Auth::user()->id]) }}">{{ __('Edit Profile') }}</i>
                                     </a>
                                 @endcan
 
                                 <a class="dropdown-item" href="{{ route('logout') }}"
                                    onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();"><i
-                                        class="fa fa-btn fa-sign-out">{{ __('Logout') }}</i>
+                                        class="fa fa-btn fa-sign-out">&nbsp;</i> {{ __('Logout') }}
                                 </a>
 
                                 <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">

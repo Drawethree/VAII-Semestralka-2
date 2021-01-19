@@ -15,7 +15,7 @@
                         @endif
                         @can('create', App\Models\User::class)
                             <div class="mb-3">
-                                <a href="{{route('user.create')}}" class="btn btn-success">{{__('Add new user')}}</a>
+                                <a href="{{route('user.create')}}" class="btn btn-success"><i class="fa fa-plus-circle">&nbsp;</i>{{__('Add new user')}}</a>
                             </div>
                         @endcan
                         {!! $grid->show() !!}

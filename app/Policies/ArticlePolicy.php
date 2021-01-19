@@ -18,7 +18,7 @@ class ArticlePolicy
      */
     public function viewAny(User $user)
     {
-        return $user->username == 'admin';
+        return $user->role_id <= 1;
     }
 
     /**
@@ -53,7 +53,7 @@ class ArticlePolicy
      */
     public function update(User $user, Article $article)
     {
-        return $user->username == 'admin' || $article->user_id == $user->id;
+        return $user->role_id <= 1 || $article->user_id == $user->id;
     }
 
     /**
@@ -65,7 +65,7 @@ class ArticlePolicy
      */
     public function delete(User $user, Article $article)
     {
-        return $user->username == 'admin' || $article->user_id == $user->id;
+        return $user->role_id <= 1 || $article->user_id == $user->id;
     }
 
     /**
@@ -77,7 +77,7 @@ class ArticlePolicy
      */
     public function restore(User $user, Article $article)
     {
-        return $user->username == 'admin';
+        return $user->role_id <= 1;
     }
 
     /**
@@ -89,6 +89,11 @@ class ArticlePolicy
      */
     public function forceDelete(User $user, Article $article)
     {
-        return $user->username == 'admin';
+        return $user->role_id <= 1;
+    }
+
+    public function approve(User $user)
+    {
+        return $user->role_id <= 1;
     }
 }

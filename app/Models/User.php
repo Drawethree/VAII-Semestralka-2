@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Hash;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable, SoftDeletes;
+    use HasFactory, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -18,7 +18,7 @@ class User extends Authenticatable
      * @var array
      */
 
-    protected $fillable = ['name', 'username', 'password', 'email', 'avatar'];
+    protected $fillable = ['name', 'username', 'password', 'email', 'avatar', 'role_id'];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -47,5 +47,9 @@ class User extends Authenticatable
     public function articles()
     {
         return $this->hasMany('App\Models\Article');
+    }
+
+    public function role() {
+        return $this->belongsTo('App\Models\Role');
     }
 }

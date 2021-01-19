@@ -13,6 +13,13 @@
                                 {{ session('status') }}
                             </div>
                         @endif
+                        @auth
+                            @can(Auth::user()->can('approve', \App\Models\Article::class) && $not_approved > 0)
+                                <div class="mt-3">
+                                    <a href="{{route('article.approveAll')}}" class="btn btn-success"><i class="fa fa-check">&nbsp;</i>{{__('Approve all')}}</a>
+                                </div>
+                            @endcan
+                        @endauth
                         {!! $grid->show() !!}
                     </div>
                 </div>

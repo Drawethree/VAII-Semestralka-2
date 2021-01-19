@@ -7,6 +7,7 @@ use App\Models\Article;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Image;
 
 class UserController extends Controller
@@ -32,7 +33,7 @@ class UserController extends Controller
         $datagrid->setColumn('name', 'Full name')
             ->setColumn('role_id', 'Role', [
                 'wrapper' => function ($value, $row) {
-                    return Role::find($value)->title;
+                    return $row->role->title;
                 }
             ])
             ->setColumn('email', 'Email Address')
@@ -45,8 +46,8 @@ class UserController extends Controller
             ->setActionColumn(['wrapper' => function ($value, $row) {
                 if ($row->username != 'admin') {
                     return '
-                    <a class="btn btn-sm btn-primary" href="' . route('user.edit', [$row->id]) . '" title="Edit">Edit</a>
-                    <a class="btn btn-sm btn-danger" onclick=" return confirm(\'Are you sure?\') " href="' . route('user.delete', [$row->id]) . '" title="Delete">Delete</a>';
+                    <a class="btn btn-sm btn-primary" href="' . route('user.edit', [$row->id]) . '" title="Edit"><i class="fa fa-edit">&nbsp;</i>Edit</a>
+                    <a class="btn btn-sm btn-danger" onclick=" return confirm(\'Are you sure?\') " href="' . route('user.delete', [$row->id]) . '" title="Delete"><i class="fa fa-trash">&nbsp;</i>Delete</a>';
                 } else {
                     //not admin user
                     //return '<p class="text-danger">You cannot modify admin</p>';
@@ -127,7 +128,7 @@ class UserController extends Controller
      *
      * @param \Illuminate\Http\Request $request
      * @param int $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function update(Request $request, User $user)
     {
@@ -140,17 +141,17 @@ class UserController extends Controller
 
         $user->update($request->all());
 
-        if($request->hasFile('avatar')){
+        if ($request->hasFile('avatar')) {
             $avatar = $request->file('avatar');
             $filename = time() . '.' . $avatar->getClientOriginalExtension();
 
-            Image::make($avatar)->resize(300, 300)->save( public_path('/uploads/avatars/' . $filename ) );
+            Image::make($avatar)->resize(300, 300)->save(public_path('/uploads/avatars/' . $filename));
 
             $user->avatar = $filename;
             $user->save();
         }
 
-        return redirect()->route('home');
+        return redirect()->route('users');
     }
 
     /**

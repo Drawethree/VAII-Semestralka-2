@@ -3,8 +3,8 @@
 @section('content')
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card mt-5">
+            <div class="col-md-8 mt-3">
+                <div class="card">
                     <div class="card-header">{{ __('Login') }}</div>
 
                     <div class="card-body">
@@ -19,7 +19,8 @@
                                 <div class="col-md-6">
                                     <input id="login" type="text"
                                            class="form-control{{ $errors->has('username') || $errors->has('email') ? ' is-invalid' : '' }}"
-                                           name="login" value="{{ old('username') ?: old('email') }}" required autofocus>
+                                           name="login" value="{{ old('username') ?: old('email') }}" required
+                                           autofocus>
 
                                     @if ($errors->has('username') || $errors->has('email'))
                                         <span class="invalid-feedback">
