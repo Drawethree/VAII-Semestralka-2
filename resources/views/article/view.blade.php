@@ -44,7 +44,7 @@
     </div>
     @auth
         @if(Auth::user()->can('create', \App\Models\Comment::class))
-            <form class="mt-3" method="PUT" action="{{ route('comment.create') }}">
+            <form class="mt-3" method="PUT" action="{{ route('comment.create', [$article->forum, $article]) }}">
                 <div class="form-group">
                     <label for="text" class="text-white"><i class="fa fa-comments" aria-hidden="true">&nbsp;</i>Add
                         Comment</label>
@@ -65,7 +65,7 @@
             </form>
         @endif
     @endauth
-    @foreach($article->comments as $comment)
+    @foreach($article->comments()->orderBy('created_at', 'desc')->get() as $comment)
         <div class="card mt-3">
             <div class="card-body">
                 <img class="card-img-top" src="/uploads/avatars/{{ $comment->user->avatar }}" alt="avatar"

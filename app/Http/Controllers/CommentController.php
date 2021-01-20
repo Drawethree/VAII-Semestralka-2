@@ -29,10 +29,10 @@ class CommentController extends Controller
             'user_id' => auth()->id()
         ]);
 
-
         $comment->save();
 
-        $article = Article::find(request('article_id'))->first();
+        $articleId = request('article_id');
+        $article = Article::where('id',$articleId)->first();
 
         return redirect()->route('article.view', [$article->forum, $article]);
     }
