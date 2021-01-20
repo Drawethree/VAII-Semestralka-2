@@ -30,7 +30,9 @@ Route::get('/api/blogStats', [HomeController::class, 'getBlogStats'])->name('blo
 Auth::routes();
 
 Route::get('forum/{forum}/article/{article}/view', [ArticleController::class, 'show'])->name('article.view');
+Route::get('forum/{forum}/article/{article}/', [ArticleController::class, 'show'])->name('article.view');
 Route::get('forum/{forum}/view', [ForumController::class, 'show'])->name('forum.view');
+
 
 
 Route::group(['middleware' => ['auth']], function () {
@@ -50,7 +52,5 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('forum/{forum}/createPost', [ForumController::class, 'createArticle'])->name('forum.newpost');
     Route::get('forum/{forum}/article/{article}/comment/{comment}/delete', [CommentController::class, 'delete'])->name('comment.delete');
     Route::get('forum/{forum}/article/{article}/addComment', [CommentController::class, 'create'])->name('comment.create');
-    Route::get('forum/{forum}/article/{article}/', [ArticleController::class, 'show'])->name('article.view');
-
 });
 
