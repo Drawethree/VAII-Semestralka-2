@@ -18,7 +18,7 @@
                             </div>
                             <div class="col-md-auto">
                                 <div class="card-body">
-                                    <a href="{{ route('article.view', [$article->id]) }}"><h4
+                                    <a href="{{ route('article.view', [$article->forum,$article]) }}"><h4
                                             class="card-title">{{ $article->title }}</h4></a>
                                     <h6 class="card-subtitle mb-2 text-muted">Created
                                         by: {{ $article->user->username }}</h6>

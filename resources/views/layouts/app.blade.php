@@ -136,12 +136,12 @@
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown1">
                                     @can('viewAny', Auth::user())
-                                        <a class="dropdown-item" href="{{ route('users') }}"><i class="fa fa-user-plus">&nbsp;</i> {{__('Manage Users')}}
+                                        <a class="dropdown-item" href="{{ route('admin.users') }}"><i class="fa fa-user-plus">&nbsp;</i> {{__('Manage Users')}}
                                         </a>
                                     @endcan
                                     @can('viewAny', \App\Models\Article::class)
                                         <a class="dropdown-item"
-                                           href="{{ route('article.index') }}"><i
+                                           href="{{ route('admin.articles') }}"><i
                                                 class="fa fa-newspaper-o">&nbsp;</i> {{__('Manage Articles')}}</a>
                                     @endcan
                                 </div>
@@ -212,7 +212,7 @@
                     @foreach(\App\Models\Article::orderBy('updated_at', 'desc')->where('approved', 1)->take(5)->get() as $post)
                         <div class="card-body">
                             <p class="card-title"><a
-                                    href=" {{ route('article.view', $post->id) }}">{{$post->title}}</a> in <a
+                                    href=" {{ route('article.view', [$post->forum,$post]) }}">{{$post->title}}</a> in <a
                                     href="{{ route('forum.view', $post->forum->id) }}">{{$post->forum->title}}</a>
                             </p>
                             <p class="card-text">Created by: {{ $post->user->username }}</p>
@@ -227,11 +227,6 @@
             </div>
 
             <main class="col-md-8">
-                @if (session('status'))
-                    <div class="alert alert-success mt-3" role="alert">
-                        {{ session('status') }}
-                    </div>
-                @endif
                 @yield('content')
             </main>
 

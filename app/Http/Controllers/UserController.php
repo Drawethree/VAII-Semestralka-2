@@ -29,7 +29,8 @@ class UserController extends Controller
 
         $datagrid = new Datagrid($users, $request->get('f', []));
 
-        $datagrid->setColumn('name', 'Full name')
+        $datagrid->setColumn('id','User ID')
+            ->setColumn('name', 'Full Name')
             ->setColumn('role_id', 'Role', [
                 'wrapper' => function ($value, $row) {
                     return $row->role->title;
@@ -42,11 +43,12 @@ class UserController extends Controller
                     return $value;
                 }
             ])
-            ->setActionColumn(['wrapper' => function ($value, $row) {
+            ->setActionColumn([
+                'wrapper' => function ($value, $row) {
                 if ($row->username != 'admin') {
                     return '
-                    <a class="btn btn-sm btn-primary" href="' . route('user.edit', [$row->id]) . '" title="Edit"><i class="fa fa-edit">&nbsp;</i>Edit</a>
-                    <a class="btn btn-sm btn-danger" onclick=" return confirm(\'Are you sure?\') " href="' . route('user.delete', [$row->id]) . '" title="Delete"><i class="fa fa-trash">&nbsp;</i>Delete</a>';
+                    <a class="btn btn-sm btn-primary" href="' . route('admin.user.edit', [$row->id]) . '" title="Edit"><i class="fa fa-edit">&nbsp;</i>Edit</a>
+                    <a class="btn btn-sm btn-danger" onclick=" return confirm(\'Are you sure?\') " href="' . route('admin.user.delete', [$row->id]) . '" title="Delete"><i class="fa fa-trash">&nbsp;</i>Delete</a>';
                 } else {
                     //not admin user
                     //return '<p class="text-danger">You cannot modify admin</p>';
@@ -93,7 +95,7 @@ class UserController extends Controller
         $user->save();
 
         Session::flash('status', 'User successfully created!');
-        return redirect()->route('user.index');
+        return redirect()->route('admin.users');
     }
 
     /**
@@ -156,7 +158,7 @@ class UserController extends Controller
 
         if (Auth::user()->getIsAdminAttribute()) {
             Session::flash('status', 'User successfully edited!');
-            return redirect()->route('users');
+            return redirect()->route('admin.users');
         } else {
             Session::flash('status', 'Profile successfully edited!');
             return redirect()->route('home');
@@ -176,6 +178,6 @@ class UserController extends Controller
         $user->articles()->delete();
 
         Session::flash('status', 'User successfully deleted!');
-        return redirect()->route('user.index');
+        return redirect()->route('admin.users');
     }
 }

@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Article;
 use App\Models\Comment;
+use App\Models\Forum;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 class CommentController extends Controller
 {
@@ -30,13 +32,17 @@ class CommentController extends Controller
 
         $comment->save();
 
-        return redirect()->route('article.view', \request('article_id'));
+        $article = Article::find(request('article_id'))->first();
+
+        return redirect()->route('article.view', [$article->forum, $article]);
     }
 
-    public function delete(Comment $comment)
+    public function delete(Forum $forum, Article $article, Comment $comment)
     {
-        $articleId = $comment->article->id;
         $comment->delete();
-        return redirect()->route('article.view', [$articleId]);
+
+        Session::flash('status', 'Comment successfully removed!');
+
+        return redirect()->route('article.view', [$forum, $article]);
     }
 }

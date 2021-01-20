@@ -1,6 +1,11 @@
 @extends('layouts.app')
 
 @section('content')
+    @if (session('status'))
+        <div class="alert alert-success" role="alert">
+            {{ session('status') }}
+        </div>
+    @endif
     <div class="card mt-3">
         <div class="card-body">
             <div class="row no-gutters">
@@ -73,7 +78,7 @@
                 @auth
                     @if(Auth::user()->can('delete', $comment))
                         <div class="mt-3">
-                            <a href="{{ route('comment.delete', [$comment->id]) }}"
+                            <a href="{{ route('comment.delete', [$comment->article->forum, $comment->article, $comment]) }}"
                                class="btn btn-outline-danger"><i class="fa fa-trash"
                                                                  aria-hidden="true">&nbsp;</i>{{__('Delete')}}
                             </a>

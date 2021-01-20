@@ -23,12 +23,13 @@ class ArticleController extends Controller
 
         $datagrid = new Datagrid($articles, $request->get('f', []));
 
-        $datagrid->setColumn('user_id', 'User', [
+        $datagrid->setColumn('id', 'Article ID')
+            ->setColumn('user_id', 'Created By', [
             'wrapper' => function ($value, $row) {
                 return $row->user->username;
             }
         ])
-            ->setColumn('title', 'Post title')
+            ->setColumn('title', 'Title')
             ->setColumn('text', 'Text')
             ->setColumn('created_at', 'Created At', [
                 'wrapper' => function ($value, $row) {
@@ -42,8 +43,8 @@ class ArticleController extends Controller
             ])
             ->setActionColumn(['wrapper' => function ($value, $row) {
                 $returnVal = '
-                    <a class="btn btn-sm btn-warning" href="' . route('article.view', [$row->id]) . '" title="View"><i class="fa fa-eye">&nbsp;</i>View</a>
-                    <a class="btn btn-sm btn-primary" href="' . route('article.edit', [$row->id]) . '" title="Edit"><i class="fa fa-edit">&nbsp;</i>Edit</a>
+                    <a class="btn btn-sm btn-warning" href="' . route('article.view', [$row->forum, $row->id]) . '" title="View"><i class="fa fa-eye">&nbsp;</i>View</a>
+                    <a class="btn btn-sm btn-primary" href="' . route('admin.article.edit', [$row->id]) . '" title="Edit"><i class="fa fa-edit">&nbsp;</i>Edit</a>
                     <a class="btn btn-sm btn-danger" onclick=" return confirm(\'Are you sure?\') " href="' . route('article.delete', [$row->id]) . '" title="Delete"><i class="fa fa-trash">&nbsp;</i>Delete</a>';
 
                 if ($row->approved == 0) {
@@ -86,15 +87,19 @@ class ArticleController extends Controller
     public
     function store(Request $request)
     {
+
         $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'text' => ['required', 'string'],
         ]);
 
+        $addedByAdmin = Auth::user()->getIsAdminAttribute();
+
+
         $data = [];
         $data['text'] = request('text');
         $data['title'] = request('title');
-        $data['approved'] = 0;
+        $data['approved'] = $addedByAdmin ? 1 : 0;
         $data['forum_id'] = request('forum_id');
         $data['user_id'] = auth()->id();
 
@@ -102,13 +107,14 @@ class ArticleController extends Controller
 
         $article->save();
 
-        if (Auth::user()->getIsAdminAttribute()) {
-            Session::flash('status', 'Article ' . $article->id . ' was edited!');
-            return redirect()->route('article.index');
+        if ($addedByAdmin) {
+            Session::flash('status', 'Your article was created and approved!');
         } else {
             Session::flash('status', 'Your article was created! Please wait until admin approves it.');
-            return redirect()->route('forum.view', $data['forum_id']);
         }
+
+        return redirect()->route('forum.view', $data['forum_id']);
+
     }
 
     /**
@@ -118,10 +124,10 @@ class ArticleController extends Controller
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\Response
      */
     public
-    function show(Article $article)
+    function show(Forum $forum, Article $article)
     {
         return view('article.view', [
-            'article' => $article
+            'article' => $article,
         ]);
     }
 
@@ -164,7 +170,7 @@ class ArticleController extends Controller
 
         Session::flash('status', 'Article ' . $article->id . ' was updated!');
 
-        return redirect()->route('article.index');
+        return redirect()->route('admin.articles');
     }
 
     /**
@@ -191,7 +197,7 @@ class ArticleController extends Controller
         $article->save();
         Session::flash('status', 'Article ' . $article->id . ' was approved!');
 
-        return redirect()->route('article.index');
+        return redirect()->route('admin.articles');
     }
 
     public function approveAll()
@@ -205,6 +211,6 @@ class ArticleController extends Controller
 
         Session::flash('status', 'All articles were approved!');
 
-        return redirect()->route('article.index');
+        return redirect()->route('admin.articles');
     }
 }
